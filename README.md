@@ -1,2 +1,2 @@
-# MERN-project-frontend
-Proyecto que utiliza es stack MERN
+# MERN-project
+Front-End of MERN project
