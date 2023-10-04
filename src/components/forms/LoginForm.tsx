@@ -1,5 +1,6 @@
 import { AxiosResponse } from 'axios'
 import { ErrorMessage, Field, Form, Formik } from 'formik'
+import { useNavigate } from 'react-router-dom'
 import * as Yup from 'yup'
 import { login } from '../../services/authService'
 
@@ -10,10 +11,13 @@ const loginSchema = Yup.object().shape({
 })
 
 export function LoginForm () {
+  const navigate = useNavigate()
+
   const initialCredentials = {
     email: '',
     password: ''
   }
+
   return (
     <div>
       <h4>Login Form</h4>
@@ -22,11 +26,12 @@ export function LoginForm () {
           validationSchema={loginSchema}
           onSubmit={async (values) => {
             login(values.email, values.password)
-              .then((response: AxiosResponse) => {
+              .then(async (response: AxiosResponse) => {
                 if (response.status === 200) {
                   if (response.data.token) {
                     console.table(response.data.message)
-                    sessionStorage.setItem('sessionToken', response.data.sessionToken)
+                    await sessionStorage.setItem('sessionToken', response.data.token)
+                    navigate('/')
                   } else {
                     throw new Error('Invalid credentials')
                   }
@@ -37,12 +42,14 @@ export function LoginForm () {
               .catch(err => console.error(`[LOGIN ERROR]: Somethig went wrong -> ${err.message}`))
           }}>
           {
-            ({ values,
-               touched, 
-               errors,
-               isSubmitting,
-               handleChange, 
-               handleBlur }) => (
+            ({
+              values,
+              touched,
+              errors,
+              isSubmitting,
+              handleChange,
+              handleBlur
+            }) => (
               <Form>
                 <label htmlFor='email'>Email</label>
                 <Field id='email' name='email' type='text' placeholder='Enter your email...' />
@@ -63,5 +70,5 @@ export function LoginForm () {
           }
         </Formik>
       </div>
-    )
+  )
 }
