@@ -1,9 +1,9 @@
-import { LoginForm } from '../components/forms/LoginForm'
+import LoginMaterial from '../components/forms/LoginMaterial'
 
 export default function LoginPage () {
   return (
     <>
-      <LoginForm />
+      <LoginMaterial />
 
     </>
   )
