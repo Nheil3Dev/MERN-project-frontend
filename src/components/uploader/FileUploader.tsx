@@ -5,7 +5,7 @@ import {
   ImagePreview,
   VideoPreview,
   type ExtFile
-} from '@dropzone-ui/react'
+} from '@files-ui/react'
 import { useState } from 'react'
 
 const BASE_URL = 'http://localhost:8000/api/uploadFile'
