@@ -1,22 +1,31 @@
 // Theme personalization of MUI
-import { ThemeProvider, createTheme, styled } from '@mui/material'
+import { ThemeProvider, createTheme, styled } from '@mui/material/styles'
 
 // CSS & Drawer
-import { CssBaseline, Drawer as MuiDrawer } from '@mui/material'
+import CssBaseline from '@mui/material/CssBaseline'
+import MuiDrawer from '@mui/material/Drawer'
 
 // Nav Bar
-import { AppBar as MuiAppBar, AppBarProps as MuiAppBarProps, Toolbar } from '@mui/material'
+import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar'
+import Toolbar from '@mui/material/Toolbar'
+import Typography from '@mui/material/Typography'
 
 // Grid & Box
-import { Box, Container, Divider, Grid, List, Paper } from '@mui/material'
+import Box from '@mui/material/Box'
+import Container from '@mui/material/Container'
+import Divider from '@mui/material/Divider'
+import Grid from '@mui/material/Grid'
+import List from '@mui/material/List'
+import Paper from '@mui/material/Paper'
 
 // Icons
 import { ChevronLeft, Logout, Menu, Notifications } from '@mui/icons-material'
-import { Badge, IconButton } from '@mui/material'
+import Badge from '@mui/material/Badge'
+import IconButton from '@mui/material/IconButton'
 
 // List for menu
-import Typography from '@mui/material/Typography'
 import { useState } from 'react'
+import { NewEditor } from '../editor/NewEditor'
 import { MenuItems } from './MenuItems'
 
 // Width for Drawer Menu
@@ -163,9 +172,9 @@ export const Dashboard = () => {
                 p: 2,
                 display: 'flex',
                 flexDirection: 'column',
-                height: 240
+                minHeight: 200
               }}>
-
+                <NewEditor />
               </Paper>
             </Grid>
 
