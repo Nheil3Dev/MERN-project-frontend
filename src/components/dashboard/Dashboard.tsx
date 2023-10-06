@@ -26,6 +26,7 @@ import IconButton from '@mui/material/IconButton'
 // List for menu
 import { useState } from 'react'
 import { NewEditor } from '../editor/NewEditor'
+import { FileUploader } from '../uploader/FileUploader'
 import { MenuItems } from './MenuItems'
 
 // Width for Drawer Menu
@@ -175,6 +176,7 @@ export const Dashboard = () => {
                 minHeight: 200
               }}>
                 <NewEditor />
+                <FileUploader />
               </Paper>
             </Grid>
 
