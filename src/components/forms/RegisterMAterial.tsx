@@ -34,6 +34,10 @@ function RegisterFormMaterial (props: FormikProps<FormikValues>) {
         <AlertTitle>Success</AlertTitle>
         User created successfully. <Link href='/login'><strong>Go to Login!</strong></Link>
       </Alert>}
+      {status === 202 && <Alert severity="error">
+        <AlertTitle>Error</AlertTitle>
+        This email is already registered.
+      </Alert>}
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -169,10 +173,11 @@ export const RegisterMaterial = withFormik({
   handleSubmit: async (values, { setStatus }) => {
     register(values.name, values.email, values.password, Number(values.age))
       .then((response: AxiosResponse) => {
+        console.log(response.status)
         if (response.status === 201) {
-          console.log(response.data)
-          setStatus(201)
+          setStatus(response.status)
         } else {
+          setStatus(response.status)
           throw new Error('Error in server')
         }
       })
