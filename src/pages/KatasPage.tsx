@@ -1,6 +1,7 @@
 import { AxiosResponse } from 'axios'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Dashboard } from '../components/dashboard/Dashboard'
 import { useSessionStorage } from '../hooks/useSessionStorage'
 import { getAllKatas } from '../services/katasService'
 import { IKata } from '../utils/types/Katas.type'
@@ -31,9 +32,9 @@ export default function KatasPage () {
         })
         .catch(err => console.log(`[GET ALL KATAS ERROR]: ${err.message}`))
     }
-  }, [loggedIn])
+  }, [loggedIn, navigate])
   return (
-    <>
+    <Dashboard>
       <h1>Katas</h1>
         {
           katas.length > 0
@@ -52,6 +53,6 @@ export default function KatasPage () {
           </ul>)
             : <p>No hay katas de momento</p>
         }
-    </>
+    </Dashboard>
   )
 }

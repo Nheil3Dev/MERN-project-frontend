@@ -8,12 +8,17 @@ import {
 } from '@files-ui/react'
 import { useState } from 'react'
 
-const BASE_URL = 'http://localhost:8000/api/uploadFile'
+const BASE_URL = 'http://localhost:8000/api/katas/upload'
 
 export function FileUploader () {
   const [files, setFiles] = useState<ExtFile[]>([])
   const [imageSrc, setImageSrc] = useState<string | undefined>()
   const [videoSrc, setVideoSrc] = useState<string | File | undefined>()
+
+  const handleUpload = (response : any) => {
+    console.log('response', response)
+  }
+
   const updateFiles = (incommingFiles: ExtFile[]) => {
     setFiles(incommingFiles)
   }
@@ -38,7 +43,7 @@ export function FileUploader () {
       maxFileSize={2998000}
       uploadConfig={{
         // autoUpload: true
-        url: BASE_URL + '/file',
+        url: BASE_URL,
         cleanOnUpload: true
       }}
       label="Drag'n drop files here or click to browse"
@@ -48,6 +53,7 @@ export function FileUploader () {
         deleteButton: {},
         uploadButton: {}
       }}
+      onUploadFinish={handleUpload}
       >
       {files.map((file) => (
         <FileMosaic

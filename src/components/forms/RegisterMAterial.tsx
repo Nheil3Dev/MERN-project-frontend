@@ -1,3 +1,4 @@
+import { Alert, AlertTitle } from '@mui/material'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
@@ -6,26 +7,33 @@ import CssBaseline from '@mui/material/CssBaseline'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Grid from '@mui/material/Grid'
 import Link from '@mui/material/Link'
-import { createTheme, ThemeProvider } from '@mui/material/styles'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
-import * as React from 'react'
+import { ThemeProvider, createTheme } from '@mui/material/styles'
+import { AxiosResponse } from 'axios'
+import { FormikProps, FormikValues, withFormik } from 'formik'
+import { register } from '../../services/authService'
+import { registerSchema } from '../../utils/validations/validationsSchemas'
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme()
 
-export default function RegisterMaterial () {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    const data = new FormData(event.currentTarget)
-    console.log({
-      email: data.get('email'),
-      password: data.get('password')
-    })
-  }
-
+function RegisterFormMaterial (props: FormikProps<FormikValues>) {
+  const {
+    values,
+    touched,
+    errors,
+    handleChange,
+    handleBlur,
+    handleSubmit,
+    status
+  } = props
   return (
     <ThemeProvider theme={defaultTheme}>
+      {status === 201 && <Alert severity="success">
+        <AlertTitle>Success</AlertTitle>
+        User created successfully. <Link href='/login'><strong>Go to Login!</strong></Link>
+      </Alert>}
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -39,28 +47,23 @@ export default function RegisterMaterial () {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <TextField
                   autoComplete="given-name"
-                  name="firstName"
+                  name='name'
                   required
                   fullWidth
-                  id="firstName"
-                  label="First Name"
+                  id='name'
+                  label="Name"
                   autoFocus
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="family-name"
-                />
+                  value={values.name}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.name && Boolean(errors.name)}
+                  helperText={touched.name ? errors.name : ''}
+                  />
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -70,6 +73,11 @@ export default function RegisterMaterial () {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
+                  value={values.email}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.email && Boolean(errors.email)}
+                  helperText={touched.email ? errors.email : ''}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -81,6 +89,43 @@ export default function RegisterMaterial () {
                   type="password"
                   id="password"
                   autoComplete="new-password"
+                  value={values.password}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.password && Boolean(errors.password)}
+                  helperText={touched.password ? errors.password : ''}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="confirm"
+                  label="Confirm Password"
+                  type="password"
+                  id="confirm"
+                  autoComplete="new-password"
+                  value={values.confirm}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.confirm && Boolean(errors.confirm)}
+                  helperText={touched.confirm ? errors.confirm : ''}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="age"
+                  label="Age"
+                  type="number"
+                  id="age"
+                  autoComplete="new-age"
+                  value={values.age}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.age && Boolean(errors.age)}
+                  helperText={touched.age ? errors.age : ''}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -100,7 +145,7 @@ export default function RegisterMaterial () {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="login" variant="body2">
                   Already have an account? Sign in
                 </Link>
               </Grid>
@@ -111,3 +156,26 @@ export default function RegisterMaterial () {
     </ThemeProvider>
   )
 }
+
+export const RegisterMaterial = withFormik({
+  mapPropsToValues: () => ({
+    name: '',
+    email: '',
+    password: '',
+    confirm: '',
+    age: ''
+  }),
+  validationSchema: registerSchema,
+  handleSubmit: async (values, { setStatus }) => {
+    register(values.name, values.email, values.password, Number(values.age))
+      .then((response: AxiosResponse) => {
+        if (response.status === 201) {
+          console.log(response.data)
+          setStatus(201)
+        } else {
+          throw new Error('Error in server')
+        }
+      })
+      .catch(err => console.error(`[REGISTER ERROR]: Somethig went wrong -> ${err.message}`))
+  }
+})(RegisterFormMaterial)

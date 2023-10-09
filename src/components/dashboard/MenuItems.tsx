@@ -3,18 +3,19 @@ import {
   EmojiEvents,
   People
 } from '@mui/icons-material'
-import { ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
+import { Link, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 
 export function MenuItems () {
   return (
     <>
-      <ListItemButton>
-        <ListItemIcon>
-          <Dashboard />
-        </ListItemIcon>
-        <ListItemText primary="Katas" />
-      </ListItemButton>
-
+      <Link href='/katas' underline='none' color='inherit'>
+        <ListItemButton>
+          <ListItemIcon>
+            <Dashboard />
+          </ListItemIcon>
+          <ListItemText primary="Katas" />
+        </ListItemButton>
+      </Link>
       <ListItemButton>
         <ListItemIcon>
           <People />

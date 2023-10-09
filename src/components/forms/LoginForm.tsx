@@ -43,12 +43,9 @@ export function LoginForm () {
           }}>
           {
             ({
-              values,
               touched,
               errors,
-              isSubmitting,
-              handleChange,
-              handleBlur
+              isSubmitting
             }) => (
               <Form>
                 <label htmlFor='email'>Email</label>

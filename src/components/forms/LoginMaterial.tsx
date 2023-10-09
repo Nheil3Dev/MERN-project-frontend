@@ -9,21 +9,22 @@ import Paper from '@mui/material/Paper'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
-import * as React from 'react'
+import { FormikProps, FormikValues, withFormik } from 'formik'
+import { loginSchema } from '../../utils/validations/validationsSchemas'
 import { CopyRight } from '../dashboard/CopyRight'
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme()
 
-export default function LoginMaterial () {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    const data = new FormData(event.currentTarget)
-    console.log({
-      email: data.get('email'),
-      password: data.get('password')
-    })
-  }
+function LoginFormMaterial (props: FormikProps<FormikValues>) {
+  const {
+    values,
+    touched,
+    errors,
+    handleChange,
+    handleBlur,
+    handleSubmit
+  } = props
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -56,7 +57,7 @@ export default function LoginMaterial () {
             <Typography component="h1" variant="h5">
               Sign in
             </Typography>
-            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+            <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
               <TextField
                 margin="normal"
                 required
@@ -66,6 +67,11 @@ export default function LoginMaterial () {
                 name="email"
                 autoComplete="email"
                 autoFocus
+                value={values.email}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.email && Boolean(errors.email)}
+                helperText={touched.email ? errors.email : ''}
               />
               <TextField
                 margin="normal"
@@ -76,6 +82,11 @@ export default function LoginMaterial () {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                value={values.password}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.password && Boolean(errors.password)}
+                helperText={touched.password ? errors.password : ''}
               />
               <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
@@ -96,7 +107,7 @@ export default function LoginMaterial () {
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link href="#" variant="body2">
+                  <Link href='/register' variant="body2">
                     {"Don't have an account? Sign Up"}
                   </Link>
                 </Grid>
@@ -109,3 +120,17 @@ export default function LoginMaterial () {
     </ThemeProvider>
   )
 }
+
+interface LoginProps {
+  onSubmit: (values: FormikValues) => Promise<void>
+}
+
+export const Login = withFormik<LoginProps, FormikValues>({
+  mapPropsToValues: () => ({
+    email: '',
+    password: ''
+  }),
+  validationSchema: loginSchema,
+  handleSubmit: (values, { props }) => props.onSubmit(values)
+}
+)(LoginFormMaterial)

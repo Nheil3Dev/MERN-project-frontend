@@ -24,9 +24,8 @@ import Badge from '@mui/material/Badge'
 import IconButton from '@mui/material/IconButton'
 
 // List for menu
-import { useState } from 'react'
-import { NewEditor } from '../editor/NewEditor'
-import { FileUploader } from '../uploader/FileUploader'
+import { ReactNode, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { MenuItems } from './MenuItems'
 
 // Width for Drawer Menu
@@ -91,11 +90,16 @@ const Drawer = styled(MuiDrawer, {
 // Define Theme
 const myTheme = createTheme()
 
+interface IDashboard {
+  children: ReactNode
+}
+
 // Dashboard content
 // TODO: Refactor with Navigation Components
-export const Dashboard = () => {
+export const Dashboard = ({ children }: IDashboard) => {
   const [open, setOpen] = useState(true)
   const toogleDrawer = () => setOpen(!open)
+  const navigate = useNavigate()
 
   return (
     <ThemeProvider theme={myTheme}>
@@ -133,7 +137,12 @@ export const Dashboard = () => {
               </Badge>
             </IconButton>
 
-            <IconButton color='inherit'>
+            <IconButton
+              color='inherit'
+              onClick={async () => {
+                await sessionStorage.removeItem('sessionToken')
+                navigate('/login')
+              }}>
               <Logout />
             </IconButton>
           </Toolbar>
@@ -157,6 +166,7 @@ export const Dashboard = () => {
             <MenuItems />
           </List>
         </Drawer>
+
         <Box component='main' sx={{
           backgroundColor: theme => theme.palette.mode === 'light' ? theme.palette.grey[200] : theme.palette.grey[800],
           flexGrow: 1,
@@ -175,8 +185,7 @@ export const Dashboard = () => {
                 flexDirection: 'column',
                 minHeight: 200
               }}>
-                <NewEditor />
-                <FileUploader />
+                {children}
               </Paper>
             </Grid>
 

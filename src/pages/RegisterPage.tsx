@@ -1,4 +1,4 @@
-import RegisterMaterial from '../components/forms/RegisterMAterial'
+import { RegisterMaterial } from '../components/forms/RegisterMAterial'
 
 export default function RegisterPage () {
   return (
