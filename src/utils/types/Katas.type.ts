@@ -5,14 +5,14 @@ export enum KataLevel {
   }
 
 export interface IKata {
-    _id: string
+    _id?: string
     name: string
     description: string
     level: KataLevel
-    intents: number
-    stars: number
+    intents?: number
+    stars?: number
     creator: string // ID of user
-    participants: string[]
+    participants?: string[]
     solution: string
   }
 

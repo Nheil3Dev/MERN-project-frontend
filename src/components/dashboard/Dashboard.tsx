@@ -14,9 +14,7 @@ import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
 import Divider from '@mui/material/Divider'
-import Grid from '@mui/material/Grid'
 import List from '@mui/material/List'
-import Paper from '@mui/material/Paper'
 
 // Icons
 import { ChevronLeft, Logout, Menu, Notifications } from '@mui/icons-material'
@@ -178,7 +176,7 @@ export const Dashboard = ({ children }: IDashboard) => {
             mg: 4,
             mt: 4
           }}>
-            <Grid item xs={12} md={8} lg={9}>
+            {/* <Grid item xs={12} md={8} lg={9}>
               <Paper sx={{
                 p: 2,
                 display: 'flex',
@@ -187,8 +185,8 @@ export const Dashboard = ({ children }: IDashboard) => {
               }}>
                 {children}
               </Paper>
-            </Grid>
-
+            </Grid> */}
+            {children}
           </Container>
         </Box>
       </Box>

@@ -19,3 +19,11 @@ export const registerSchema = Yup.object().shape({
   }),
   age: Yup.number().required('Age is required')
 })
+
+export const kataSchema = Yup.object().shape({
+  name: Yup.string().required('Name is required'),
+  description: Yup.string().required('Description is required'),
+  level: Yup.string().required(),
+  creator: Yup.string().required('Creator is required'),
+  solution: Yup.string().required('Solution is required')
+})

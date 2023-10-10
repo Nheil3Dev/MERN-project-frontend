@@ -1,57 +1,48 @@
-import { Alert, AlertTitle } from '@mui/material'
+import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import Checkbox from '@mui/material/Checkbox'
 import Container from '@mui/material/Container'
 import CssBaseline from '@mui/material/CssBaseline'
-import FormControlLabel from '@mui/material/FormControlLabel'
 import Grid from '@mui/material/Grid'
-import Link from '@mui/material/Link'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import { AxiosResponse } from 'axios'
 import { FormikProps, FormikValues, withFormik } from 'formik'
-import { register } from '../../services/authService'
-import { registerSchema } from '../../utils/validations/validationsSchemas'
+import { addKata } from '../../services/katasService'
+import { KataLevel } from '../../utils/types/Katas.type'
+import { kataSchema } from '../../utils/validations/validationsSchemas'
+import { NewEditor } from '../editor/NewEditor'
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme()
 
 // TODO: Poner una alerta cuando no introduces bien las credenciales
 
-function RegisterFormMaterial (props: FormikProps<FormikValues>) {
+function KataFormMaterial (props: FormikProps<FormikValues>) {
   const {
     values,
     touched,
     errors,
     handleChange,
     handleBlur,
-    handleSubmit,
-    status
+    handleSubmit
   } = props
+
   return (
     <ThemeProvider theme={defaultTheme}>
-      {status === 201 && <Alert severity="success">
-        <AlertTitle>Success</AlertTitle>
-        User created successfully. <Link href='/login'><strong>Go to Login!</strong></Link>
-      </Alert>}
-      {status === 202 && <Alert severity="error">
-        <AlertTitle>Error</AlertTitle>
-        This email is already registered.
-      </Alert>}
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
           sx={{
-            marginTop: 8,
+            marginTop: 2,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center'
           }}
         >
           <Typography component="h1" variant="h5">
-            Sign up
+            Add new kata
           </Typography>
           <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
@@ -75,70 +66,81 @@ function RegisterFormMaterial (props: FormikProps<FormikValues>) {
                 <TextField
                   required
                   fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                  value={values.email}
+                  id="description"
+                  label="Description"
+                  name="description"
+                  autoComplete="description"
+                  value={values.description}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  error={touched.email && Boolean(errors.email)}
-                  helperText={touched.email ? errors.email : ''}
+                  error={touched.description && Boolean(errors.description)}
+                  helperText={touched.description ? errors.description : ''}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl fullWidth>
+                  <InputLabel id="level">Level</InputLabel>
+                  <Select
+                    labelId="level-select-label"
+                    id="level"
+                    name='level'
+                    value={values.level}
+                    label="Age"
+                    onChange={handleChange}
+                  >
+                    <MenuItem value={KataLevel.BASIC}>{KataLevel.BASIC}</MenuItem>
+                    <MenuItem value={KataLevel.MEDIUM}>{KataLevel.MEDIUM}</MenuItem>
+                    <MenuItem value={KataLevel.HIGH}>{KataLevel.HIGH}</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="creator"
+                  label="Creator"
+                  type="creator"
+                  id="creator"
+                  autoComplete="new-creator"
+                  value={values.creator}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.creator && Boolean(errors.creator)}
+                  helperText={touched.creator ? errors.creator : ''}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="new-password"
-                  value={values.password}
+                  name="solution"
+                  label="Solution"
+                  id="solution"
+                  autoComplete="new-solution"
+                  value={values.solution}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  error={touched.password && Boolean(errors.password)}
-                  helperText={touched.password ? errors.password : ''}
+                  error={touched.solution && Boolean(errors.solution)}
+                  helperText={touched.solution ? errors.solution : ''}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
-                  name="confirm"
-                  label="Confirm Password"
-                  type="password"
-                  id="confirm"
-                  autoComplete="new-password"
-                  value={values.confirm}
+                  name="code"
+                  label="code"
+                  id="code"
+                  autoComplete="new-code"
+                  value={values.code}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  error={touched.confirm && Boolean(errors.confirm)}
-                  helperText={touched.confirm ? errors.confirm : ''}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="age"
-                  label="Age"
-                  type="number"
-                  id="age"
-                  autoComplete="new-age"
-                  value={values.age}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touched.age && Boolean(errors.age)}
-                  helperText={touched.age ? errors.age : ''}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I want to receive inspiration, marketing promotions and updates via email."
-                />
+                  error={touched.code && Boolean(errors.code)}
+                  helperText={touched.code ? errors.code : ''}
+                >
+                </TextField>
+                  <NewEditor setCodeText={handleChange} />
               </Grid>
             </Grid>
             <Button
@@ -147,15 +149,8 @@ function RegisterFormMaterial (props: FormikProps<FormikValues>) {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign Up
+              Add
             </Button>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Link href="login" variant="body2">
-                  Already have an account? Sign in
-                </Link>
-              </Grid>
-            </Grid>
           </Box>
         </Box>
       </Container>
@@ -163,26 +158,34 @@ function RegisterFormMaterial (props: FormikProps<FormikValues>) {
   )
 }
 
-export const RegisterMaterial = withFormik({
+export const KataForm = withFormik({
   mapPropsToValues: () => ({
     name: '',
-    email: '',
-    password: '',
-    confirm: '',
-    age: ''
+    description: '',
+    level: KataLevel.BASIC,
+    creator: '',
+    solution: '',
+    code: ''
   }),
-  validationSchema: registerSchema,
-  handleSubmit: async (values, { setStatus }) => {
-    register(values.name, values.email, values.password, Number(values.age))
+  validationSchema: kataSchema,
+  handleSubmit: async (values) => {
+    const token = sessionStorage.getItem('sessionToken') ?? ''
+    const kata = {
+      name: values.name,
+      description: values.description,
+      level: values.level,
+      creator: values.creator,
+      solution: values.solution
+    }
+    addKata(token, kata)
       .then((response: AxiosResponse) => {
         console.log(response.status)
         if (response.status === 201) {
-          setStatus(response.status)
+          console.log(response.status)
         } else {
-          setStatus(response.status)
           throw new Error('Error in server')
         }
       })
       .catch(err => console.error(`[REGISTER ERROR]: Somethig went wrong -> ${err.message}`))
   }
-})(RegisterFormMaterial)
+})(KataFormMaterial)

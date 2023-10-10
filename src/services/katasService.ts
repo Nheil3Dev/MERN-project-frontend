@@ -1,5 +1,6 @@
 import { AxiosRequestConfig } from 'axios'
 import axios from '../utils/config/axios.config'
+import { IKata } from '../utils/types/Katas.type'
 
 /**
  * Method to obtain all katas
@@ -33,4 +34,14 @@ export const getKataById = (token: string, id: string) => {
   }
 
   return axios.get('/katas', options)
+}
+
+export const addKata = (token: string, kata: IKata) => {
+  const options: AxiosRequestConfig = {
+    headers: {
+      'x-access-token': token,
+      'Content-Type': 'application/json'
+    }
+  }
+  return axios.post('/katas', kata, options)
 }

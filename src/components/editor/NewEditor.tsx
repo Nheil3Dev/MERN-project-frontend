@@ -11,7 +11,11 @@ import 'prismjs/themes/prism-tomorrow.css' // Example style, you can use another
 import { useState } from 'react'
 import Editor from 'react-simple-code-editor'
 
-export function NewEditor () {
+interface NewEditprProps {
+  setCodeOut: (code: string) => void
+}
+
+export function NewEditor ({ setCodeOut }: NewEditprProps) {
   const exampleCode = '//Example code:\nfunction add(a, b) {\n  return a + b;\n}'
   const [code, setCode] = useState(exampleCode)
 
@@ -44,7 +48,10 @@ export function NewEditor () {
       </select>
       <Editor
         value={code}
-        onValueChange={newCode => setCode(newCode)}
+        onValueChange={newCode => {
+          setCode(newCode)
+          setCodeOut(newCode)
+        }}
         highlight={newCode => {
           return highlight(newCode, languages[codeLanguage], codeLanguage)
         }}
